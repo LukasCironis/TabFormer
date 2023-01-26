@@ -27,7 +27,7 @@ class TransactionDataset(Dataset):
                  seq_len=10,
                  num_bins=10,
                  cached=True,
-                 root="./data/card/",
+                 root="./data/credit_card/",
                  fname="card_trans",
                  vocab_dir="checkpoints",
                  fextension="",
@@ -100,8 +100,16 @@ class TransactionDataset(Dataset):
     @staticmethod
     def timeEncoder(X):
         X_hm = X['Time'].str.split(':', expand=True)
-        d = pd.to_datetime(dict(year=X['Year'], month=X['Month'], day=X['Day'], hour=X_hm[0], minute=X_hm[1])).astype(
-            int)
+        d = pd.to_datetime(
+            dict(
+                year=X['Year'], 
+                month=X['Month'], 
+                day=X['Day'], 
+                hour=X_hm[0], 
+                minute=X_hm[1]
+                )
+            ).astype(np.int64)
+        
         return pd.DataFrame(d)
 
     @staticmethod

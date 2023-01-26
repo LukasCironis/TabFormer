@@ -96,12 +96,12 @@ def main(args):
     log.info(f"model initiated: {tab_net.model.__class__}")
 
     if args.flatten:
-        collactor_cls = "DataCollatorForLanguageModeling"
+        collator_cls = "DataCollatorForLanguageModeling"
     else:
-        collactor_cls = "TransDataCollatorForLanguageModeling"
+        collator_cls = "TransDataCollatorForLanguageModeling"
 
-    log.info(f"collactor class: {collactor_cls}")
-    data_collator = eval(collactor_cls)(
+    log.info(f"collator class: {collator_cls}")
+    data_collator = eval(collator_cls)(
         tokenizer=tab_net.tokenizer, mlm=args.mlm, mlm_probability=args.mlm_prob
     )
 
@@ -138,7 +138,13 @@ if __name__ == "__main__":
 
     parser = define_main_parser()
     opts = parser.parse_args()
-
+    
+    opts.mlm = True
+    opts.do_train = True
+    opts.field_ce = True
+    opts.field_hs = 64
+    opts.checkpoint = 6000
+ 
     opts.log_dir = join(opts.output_dir, "logs")
     makedirs(opts.output_dir, exist_ok=True)
     makedirs(opts.log_dir, exist_ok=True)
