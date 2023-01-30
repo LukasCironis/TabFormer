@@ -10,6 +10,8 @@ from transformers import DataCollatorForLanguageModeling, Trainer, TrainingArgum
 
 from dataset.prsa import PRSADataset
 from dataset.card import TransactionDataset
+from dataset.insurance import InsuranceDataset
+
 from models.modules import TabFormerBertLM, TabFormerGPT2
 from misc.utils import random_split_dataset
 from dataset.datacollator import TransDataCollatorForLanguageModeling
@@ -53,6 +55,20 @@ def main(args):
                               use_station=False,
                               flatten=args.flatten,
                               vocab_dir=args.output_dir)
+    
+    elif args.data_type == 'insurance':
+        dataset = InsuranceDataset(root=args.data_root,
+                                   fname=args.data_fname,
+                                   fextension=args.data_extension,
+                                   vocab_dir=args.output_dir,
+                                   nrows=args.nrows,
+                                   user_ids=args.user_ids,
+                                   mlm=args.mlm,
+                                   cached=args.cached,
+                                   stride=args.stride,
+                                   flatten=args.flatten,
+                                   return_labels=False,
+                                   skip_user=args.skip_user)
 
     else:
         raise Exception(f"data type '{args.data_type}' not defined")
@@ -62,7 +78,7 @@ def main(args):
 
     # split dataset into train, val, test [0.6. 0.2, 0.2]
     totalN = len(dataset)
-    trainN = int(0.6 * totalN)
+    trainN = int(0.8 * totalN)
 
     valtestN = totalN - trainN
     valN = int(valtestN * 0.5)
@@ -133,7 +149,6 @@ def main(args):
 
     trainer.train(model_path=model_path)
 
-
 if __name__ == "__main__":
 
     parser = define_main_parser()
@@ -144,7 +159,7 @@ if __name__ == "__main__":
     opts.field_ce = True
     opts.field_hs = 64
     opts.checkpoint = 6000
- 
+    
     opts.log_dir = join(opts.output_dir, "logs")
     makedirs(opts.output_dir, exist_ok=True)
     makedirs(opts.log_dir, exist_ok=True)

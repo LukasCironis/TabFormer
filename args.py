@@ -25,13 +25,13 @@ def define_main_parser(parser=None):
                         help="mask mlm_probability")
 
     parser.add_argument("--data_type", type=str,
-                        default="card", choices=['card', 'prsa'],
+                        default="insurance", choices=['card', 'prsa', "insurance"],
                         help='root directory for files')
     parser.add_argument("--data_root", type=str,
-                        default="./data/credit_card/",
+                        default="./data/insurance/",
                         help='root directory for files')
     parser.add_argument("--data_fname", type=str,
-                        default="card_transaction.v1",
+                        default="df_ar",
                         help='file name of transaction')
     parser.add_argument("--data_extension", type=str,
                         default="",
